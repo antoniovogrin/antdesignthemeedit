@@ -1,14 +1,19 @@
-import classNames from 'classnames';
 import type { ReactNode } from 'react';
 import React, { useContext } from 'react';
+import classNames from 'classnames';
+
 import type { ConfigConsumerProps } from '../config-provider';
-import { ConfigContext } from '../config-provider';
+import ConfigProvider, { ConfigContext } from '../config-provider';
 import useMessage from '../message/useMessage';
 import useModal from '../modal/useModal';
 import useNotification from '../notification/useNotification';
 import type { AppConfig, useAppProps } from './context';
 import AppContext, { AppConfigContext } from './context';
 import useStyle from './style';
+import darkTheme from './darkTheme';
+import defaultTheme from './defaultTheme';
+
+import './fonts/Font.scss';
 
 export interface AppProps extends AppConfig {
   style?: React.CSSProperties;
@@ -63,12 +68,15 @@ const App: React.FC<AppProps> & { useApp: typeof useApp } = (props) => {
   return wrapSSR(
     <AppContext.Provider value={memoizedContextValue}>
       <AppConfigContext.Provider value={mergedAppConfig}>
-        <div className={customClassName} style={style}>
-          {ModalContextHolder}
-          {messageContextHolder}
-          {notificationContextHolder}
-          {children}
-        </div>
+        {/* // here change between themes darkTheme */}
+        <ConfigProvider theme={defaultTheme}>
+          <div className={customClassName} style={style}>
+            {ModalContextHolder}
+            {messageContextHolder}
+            {notificationContextHolder}
+            {children}
+          </div>
+        </ConfigProvider>
       </AppConfigContext.Provider>
     </AppContext.Provider>,
   );
